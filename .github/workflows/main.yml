@@ -60,25 +60,12 @@ jobs:
         run: |
           echo 'org.gradle.jvmargs=-Xmx2048m' >> gradle.properties
           ./gradlew prebuild
-
-      - name: Build release
-        id: buildRelease
-        run: |
-          ./gradlew :app:buildRelease
-          echo "releaseName=$(ls app/build/apk/release/HMA*-release.apk | awk -F '(/|.apk)' '{print $5}')" >> $GITHUB_OUTPUT
-
+          
       - name: Build debug
         id: buildDebug
         run: |
           ./gradlew :app:buildDebug
           echo "debugName=$(ls app/build/apk/debug/HMA*-debug.apk | awk -F '(/|.apk)' '{print $5}')" >> $GITHUB_OUTPUT
-
-      - name: Upload release
-        if: success()
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ steps.buildRelease.outputs.releaseName }}
-          path: "app/build/apk/release/HMA*-release.apk"
 
       - name: Upload debug
         if: success()
